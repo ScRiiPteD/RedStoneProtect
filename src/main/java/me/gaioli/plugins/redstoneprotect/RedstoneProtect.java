@@ -95,7 +95,7 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
         }
         public String getPromptText(ConversationContext context) {
             Player player = (Player)context.getForWhom();
-            if(player.hasPermission("dc.region.vip"))
+            if(player.hasPermission("rp.protect.vip"))
                 return "What size region would you like to create? 10, 20, 40";
             return "What size region would you like to create? " + formatFixedSet();
         }
@@ -136,24 +136,24 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
             Player player = (Player)context.getSessionData("who");
             String type = (String)context.getSessionData("type");
             if (type.equals("10")) {
-                if (economy.has(player.getPlayerListName(), 200))
-                economy.withdrawPlayer(player.getPlayerListName(), 200);
+                if (economy.has(player.getPlayerListName(), config.rLowPrice))
+                economy.withdrawPlayer(player.getPlayerListName(), config.rLowPrice);
                 else {
-                   return "You do not have enough! You need $200 for a 10x10!";
+                   return "You do not have enough! You need $"+config.rLowPrice+" for a 10x10!";
                 }  
             } else if(type.equals("20")) {
-                if (economy.has(player.getPlayerListName(), 1000))
-                    economy.withdrawPlayer(player.getPlayerListName(), 1000);
+                if (economy.has(player.getPlayerListName(), config.rMidPrice))
+                    economy.withdrawPlayer(player.getPlayerListName(), config.rMidPrice);
                 else
-                    return "You do not have enough! You need $1000 for a 20x20!";
+                    return "You do not have enough! You need $"+config.rMidPrice+" for a 20x20!";
             } else if (type.equals("40")) {
-                if(player.hasPermission("dc.protection.40")) {
-                    if (economy.has(player.getPlayerListName(), 4000))
-                        economy.withdrawPlayer(player.getPlayerListName(), 4000);
+                if(player.hasPermission("rp.protect.vip")) {
+                    if (economy.has(player.getPlayerListName(), config.rHighPrice))
+                        economy.withdrawPlayer(player.getPlayerListName(), config.rHighPrice);
                     else
-                        return "You do not have enough! You need $4000 for a 40x40!";
+                        return "You do not have enough! You need $"+config.rHighPrice+" for a 40x40!";
                 } else
-                    return "You must be VIP + to generate a 40x40 Region!";
+                    return "You do not have the permission to generate a 40x40 Region!";
             }
             try {
                 if (player != null)
@@ -165,7 +165,7 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
             } catch (IncompleteRegionException ex) {
                 Logger.getLogger(RedstoneProtect.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return "Created a"+type+"by"+type+" region for: "+player.getName();
+            return "Created a "+type+" by "+type+" region for: "+player.getName();
         }
         
         @Override
@@ -180,12 +180,12 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
             Player who = (Player)context.getSessionData("who");
             
             if (what != null && who == null) {
-                return ChatColor.AQUA+"[DCR]Region-Size:"+what+": ";
+                return ChatColor.AQUA+config.cprefix+" Region-Size:"+what+": ";
             }
             if (what != null && who != null) {
-                return ChatColor.AQUA+"[DCR]Region-Size:"+what+" Player: "+who.getDisplayName()+": ";
+                return ChatColor.AQUA+config.cprefix+" Region-Size:"+what+" Player: "+who.getDisplayName()+": ";
             }
-            return ChatColor.AQUA+"[DCR] ";
+            return ChatColor.AQUA+config.cprefix+" ";
         }
     }
     
@@ -213,13 +213,13 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
         Player player = event.getPlayer();
         
         if(block.getType().equals(Material.REDSTONE_ORE)) {
-            if (player instanceof Conversable && player.hasPermission("dc.protect.block")) {
-                player.sendMessage(ChatColor.AQUA+"[DCR]Starting Region Build...");
+            if (player instanceof Conversable && player.hasPermission("rp.protect.block")) {
+                player.sendMessage(ChatColor.AQUA+config.cprefix+"Starting Region Build...");
                 player.sendMessage(ChatColor.LIGHT_PURPLE+"Region Prices:");
-                player.sendMessage((ChatColor.LIGHT_PURPLE+"10x10 - $100"));
-                player.sendMessage(ChatColor.LIGHT_PURPLE+"20x20 - $1000");
-                if (player.hasPermission("dc.region.vip"))
-                player.sendMessage(ChatColor.LIGHT_PURPLE+"40x40 - $4000");
+                player.sendMessage((ChatColor.LIGHT_PURPLE+"10x10 - $"+config.rLowPrice));
+                player.sendMessage(ChatColor.LIGHT_PURPLE+"20x20 - $"+config.rMidPrice);
+                if (player.hasPermission("rp.protect.vip"))
+                player.sendMessage(ChatColor.LIGHT_PURPLE+"40x40 - $"+config.rHighPrice);
                 conversationFactory.buildConversation((Conversable)player).begin();
                 event.setCancelled(true);
                 ItemStack redstone = new ItemStack(Material.REDSTONE_ORE, 1);
@@ -234,13 +234,9 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
     
     public void createRegion(Player player, String size) throws RegionOperationException, IncompleteRegionException {
         Vector vector = new Vector();
-        //WorldEditPlugin worldEdit = (WorldEditPlugin)getServer().getPluginManager().getPlugin("WorldEdit");
-        //WorldGuardPlugin worldGuard = (WorldGuardPlugin)getServer().getPluginManager().getPlugin("WorldGuard");
-        log("Getting WorldGuard");
         if (worldGuard == null) {
             return;
         }
-        log("Getting WorldEdit");
         WorldEditPlugin worldEdit = getWorldEdit();
         WorldEdit we = worldEdit.getWorldEdit();
         CuboidRegionSelector selector = new CuboidRegionSelector();
@@ -248,25 +244,17 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
         if (player == null) {
             return;
         }
-        log("Setting the points");
         if (size.equals("10")) {
-            log("Getting point1");
             this.pos1 = player.getLocation().add(5, player.getLocation().getY(), 5);
-            log("Getting point2");
             this.pos2 = player.getLocation().subtract(5, player.getLocation().getY(), 5);
-            log("Setting Vector 1");
             Vector vpos1 = vector.add(pos1.getX(), pos1.getY(), pos1.getZ());
-            log("Setting Vector 2");
             Vector vpos2 = vector.add(pos2.getX(), pos2.getY(), pos2.getZ());
-            log("Spawning the fence");
             if (we == null)
                 return;
             sf.SpawnFence(vpos1, vpos2, size, player);
             if (selector == null) 
                 return;
-            log("Selecting Primary Point");
             selector.selectPrimary(vpos1);
-            log("Selecting Secondary Point");
             selector.selectSecondary(vpos2);
         } else if (size.equals("20")) {
             this.pos1 = player.getLocation().add(10, player.getLocation().getY(), 10);
@@ -279,7 +267,7 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
             selector.selectPrimary(vpos1);
             selector.selectSecondary(vpos2);
         } else if (size.equals("40")) {
-            if (!player.hasPermission("dc.region.vip")) 
+            if (!player.hasPermission("rp.protect.vip")) 
                 return;
             this.pos1 = player.getLocation().add(20, player.getLocation().getY() , 20);
             this.pos2 = player.getLocation().subtract(20, player.getLocation().getY(), 20);
@@ -292,36 +280,24 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
             selector.selectSecondary(vpos2);
         } else if (size.isEmpty())
             return;
-        log("Learning changes");
         selector.learnChanges();
-        
-        log("Getting the selection above");
         if (player == null) {
             return;
         }
-            log("Making it top to bottom");
                 selector.getRegion().expand(
                             new Vector(0, (player.getWorld().getMaxHeight() +1), 0),
                             new Vector(0, -(player.getWorld().getMaxHeight() - 1), 0)
                             );
-                log("Learning that");
                 selector.learnChanges();
-            
-                log("Setting block vectors again");
         BlockVector min = selector.getRegion().getPos1().toBlockVector();
         BlockVector max = selector.getRegion().getPos2().toBlockVector();
         RegionManager rm = worldGuard.getGlobalRegionManager().get(player.getWorld());
-        log("Getting random number");
         Random rand = new Random();
         ProtectedRegion pr;
         int range1 = rand.nextInt(20);
-        if (player.hasPermission("dc.protect")) {
-            log("Setting region");
+        if (player.hasPermission("rp.protect")) {
             String rname = player.getName()+"_"+range1;
             RegionHandler rh = new RegionHandler(worldGuard,min,max,rname,player,this);
-            //pr = new ProtectedCuboidRegion(rname, min, max);
-            //rm.addRegion(pr);
-            log("Region created with name: "+rname);
         }
         
     }

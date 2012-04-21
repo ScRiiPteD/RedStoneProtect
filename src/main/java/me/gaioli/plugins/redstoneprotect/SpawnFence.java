@@ -44,7 +44,7 @@ public class SpawnFence {
         WorldEdit we = worldEdit.getWorldEdit();
         if (player == null)
             return;
-        World worldf = Bukkit.getWorld("diamond_craft");
+        World worldf = Bukkit.getWorld(player.getWorld().getUID());
         if (we == null) {
             Logger.getLogger(SpawnFence.class.getName()).log(Level.SEVERE, null, "Couldn't get worldedit!");
             return;

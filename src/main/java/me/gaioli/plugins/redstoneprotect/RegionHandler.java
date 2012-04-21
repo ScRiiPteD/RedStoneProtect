@@ -45,8 +45,7 @@ public class RegionHandler {
             String rname = player.getName()+"_"+range1;
             pr = new ProtectedCuboidRegion(rname,min,max);
             //rm.getRegion(pr);        
-            }
-        plugin.log("Creating the region from another class");
+        }
         //pr.getIntersectingRegions(overlap);
         rm.addRegion(pr);
     }

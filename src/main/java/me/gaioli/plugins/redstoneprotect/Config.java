@@ -17,6 +17,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Config {
     private RedstoneProtect plugin;
     public String cprefix;
+    public int rLowPrice;
+    public int rMidPrice;
+    public int rHighPrice;
     public Config (RedstoneProtect plugin) {
         this.plugin = plugin;
     }
@@ -30,6 +33,9 @@ public class Config {
             config.set("region.sizes.1", "10");
             config.set("region.sizes.2", "20");
             config.set("region.sizes.3", "40");
+            config.set("region.price.lowest", "100");
+            config.set("region.price.middle", "1000");
+            config.set("region.price.highest", "4000");
             try {
                 config.save(configFile);
             } catch (IOException ex) {
@@ -37,6 +43,9 @@ public class Config {
             }
         } else {
             cprefix = config.getString("prefix");
+            rLowPrice = config.getInt("region.price.lowest");
+            rMidPrice = config.getInt("region.price.middle");
+            rHighPrice = config.getInt("region.price.highest");
         }
     }
 }

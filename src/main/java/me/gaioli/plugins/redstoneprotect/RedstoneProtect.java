@@ -295,7 +295,7 @@ public class RedstoneProtect extends JavaPlugin implements Listener, Conversatio
         Random rand = new Random();
         ProtectedRegion pr;
         int range1 = rand.nextInt(20);
-        if (player.hasPermission("rp.protect")) {
+        if (player.hasPermission("rp.protect.block")) {
             String rname = player.getName()+"_"+range1;
             RegionHandler rh = new RegionHandler(worldGuard,min,max,rname,player,this);
         }

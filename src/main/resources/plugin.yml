@@ -9,3 +9,16 @@ startup: postworld
 url: http://diamondcraft.co/
 version: '1.0'
 depends: [WorldEdit, WorldGuard, Vault]
+permissions:
+  rp.*:
+    description: Allows access to all RedStone Protection permissions
+    children:
+      rp.protect.vip: true
+      rp.protect.block: true
+  rp.protect.vip:
+    description: Allows the user to buy/make 40x40 regions
+    default: op
+  rp.protect.block:
+    description: Allows the user to buy/make 10x10 and 20x20 regions
+    default: op
+      

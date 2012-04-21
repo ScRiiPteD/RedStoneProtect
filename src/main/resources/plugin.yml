@@ -1,0 +1,10 @@
+author: Gaioli
+database: false
+description: Let users protect their own land with RedStone Protection. Hooks into
+  WorldGuard and Vault to allow users to buy protection from the server.
+generator: http://dinnerbone.com/minecraft/tools/pluginator/
+main: me.gaioli.plugins.redstoneprotect.RedstoneProtect
+name: RedStoneProtect
+startup: postworld
+url: http://diamondcraft.co/
+version: '1.0'

@@ -7,7 +7,7 @@ main: me.gaioli.plugins.redstoneprotect.RedstoneProtect
 name: RedStoneProtect
 startup: postworld
 url: http://diamondcraft.co/
-version: '1.0'
+version: '1.1'
 depends: [WorldEdit, WorldGuard, Vault]
 permissions:
   rp.*:

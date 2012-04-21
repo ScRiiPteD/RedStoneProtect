@@ -47,6 +47,7 @@ public class RegionHandler {
             //rm.getRegion(pr);        
         }
         //pr.getIntersectingRegions(overlap);
+        plugin.dev("Spawning a region named:"+pname, "RegionHandler");
         rm.addRegion(pr);
     }
 }

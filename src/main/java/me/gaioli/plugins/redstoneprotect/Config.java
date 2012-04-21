@@ -20,6 +20,7 @@ public class Config {
     public int rLowPrice;
     public int rMidPrice;
     public int rHighPrice;
+    public boolean devMessages;
     public Config (RedstoneProtect plugin) {
         this.plugin = plugin;
     }
@@ -36,6 +37,7 @@ public class Config {
             config.set("region.price.lowest", "100");
             config.set("region.price.middle", "1000");
             config.set("region.price.highest", "4000");
+            config.set("developer.messages", false);
             try {
                 config.save(configFile);
             } catch (IOException ex) {
@@ -46,6 +48,7 @@ public class Config {
             rLowPrice = config.getInt("region.price.lowest");
             rMidPrice = config.getInt("region.price.middle");
             rHighPrice = config.getInt("region.price.highest");
+            devMessages = config.getBoolean("region.price.highest");
         }
     }
 }

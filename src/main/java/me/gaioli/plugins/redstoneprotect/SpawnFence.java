@@ -23,7 +23,7 @@ import org.bukkit.plugin.Plugin;
 
 /**
  *
- * @author tjs238
+ * @author Gaioli
  */
 public class SpawnFence {
     private RedstoneProtect plugin;

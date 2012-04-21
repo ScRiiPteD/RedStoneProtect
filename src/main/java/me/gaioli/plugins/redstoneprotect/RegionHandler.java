@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 
 /**
  *
- * @author tjs238
+ * @author Gaioli
  */
 public class RegionHandler {
     ProtectedRegion pr;

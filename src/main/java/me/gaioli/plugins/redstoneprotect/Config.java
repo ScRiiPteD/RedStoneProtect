@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 /**
  *
- * @author tjs238
+ * @author Gaioli
  */
 public class Config {
     private RedstoneProtect plugin;

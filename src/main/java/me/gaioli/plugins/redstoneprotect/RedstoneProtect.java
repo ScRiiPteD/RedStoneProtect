@@ -1,5 +1,10 @@
 package me.gaioli.plugins.redstoneprotect;
 
+/*
+ * 
+ * @author Gaioli
+ */
+
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.Vector;
